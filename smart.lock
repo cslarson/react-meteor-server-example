@@ -3,7 +3,8 @@
   "dependencies": {
     "basePackages": {
       "server-session": {},
-      "router": {}
+      "router": {},
+      "react": {}
     },
     "packages": {
       "server-session": {
@@ -15,6 +16,11 @@
         "git": "https://github.com/tmeasday/meteor-router.git",
         "tag": "v0.5.4.1",
         "commit": "d00e380dda2184b70e909fc4a0fb5358d602c586"
+      },
+      "react": {
+        "git": "https://github.com/dhl/meteor-react.git",
+        "tag": "v0.0.3",
+        "commit": "24a87593db965ed9424efeffe98af19b4b743fd8"
       },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",

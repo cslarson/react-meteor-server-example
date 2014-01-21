@@ -10,6 +10,22 @@
 
 Players = new Meteor.Collection("players");
 
+var User = React.createClass({
+  mixins: [ReactMeteor.Mixin],
+
+  getMeteorState: function() {
+    return { user: Meteor.isClient && !Meteor.loggingIn() ? Meteor.user() : null };
+  },
+  
+  render: function(){
+    if(this.state.user){
+      return <p>Welcome, { this.state.user.emails[0].address }</p>;
+    } else {
+      return <p>Welcome, guest</p>
+    }
+  }
+})
+
 var Leaderboard = React.createClass({
   mixins: [ReactMeteor.Mixin],
 
@@ -56,7 +72,7 @@ var Leaderboard = React.createClass({
       );
     }
 
-    return <div>{ children }</div>;
+    return <div><User />{ children }</div>;
   }
 });
 
@@ -92,17 +108,18 @@ var PlayerViewRootComponent = React.createClass({
   mixins: [ReactMeteor.Mixin],
 
   getMeteorState: function() {
-    return Players.findOne({player_id: this.props.player_id});
+    return {player: Players.findOne({player_id: this.props.player_id})};
   },
 
   addFivePoints: function() {
-    Players.update({_id: this.state._id}, {$inc: {score: 5}});
+    Players.update({_id: this.state.player._id}, {$inc: {score: 5}});
   },
   
   render: function(){
     return (
       <div>
-        <h1>{this.state.name} has {this.state.score} points.</h1>
+        <User />
+        <h1>{this.state.player.name} has {this.state.player.score} points.</h1>
         <input
           type="button"
           className="inc"
@@ -123,27 +140,16 @@ if (Meteor.isClient) {
       );
     },
     '/player/:player_id': function(id) {
-      React.renderComponent(
-       <PlayerViewRootComponent player_id={id} />,
-       document.body
-      );
+      if(Players.findOne({player_id: id})){
+        React.renderComponent(
+         <PlayerViewRootComponent player_id={id} />,
+         document.body
+        );
+      }
     },
     '*': 'not_found'
   });
   Meteor.startup(function() {
-//    page("/", function(){
-//      React.renderComponent(
-//        <Leaderboard />,
-//        document.body
-//      );
-//    });
-//    page("/player/:player_id", function(ctx){
-//      React.renderComponent(
-//        <PlayerViewRootComponent player_id={ctx.params.player_id} />,
-//        document.body
-//      );
-//    });
-//    page();
   });
 }
 
