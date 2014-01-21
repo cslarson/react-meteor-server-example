@@ -16,5 +16,7 @@ git clone https://github.com/cslarson/react-meteor-server-example.git
 Run the leaderboard app:
 ```
 cd react-meteor-server-example
+git submodule init
+git submodule update
 meteor
 ```
